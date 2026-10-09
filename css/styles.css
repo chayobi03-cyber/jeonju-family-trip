@@ -1,0 +1,54 @@
+:root{--bg:#f6f4ef;--card:#fff;--ink:#222;--mut:#6b6b6b;--pri:#2f6f5e;--pri-ink:#fff;--line:#e3dfd6;--warn:#b45309;--warnbg:#fef3c7;--ok:#15803d;--bad:#b91c1c}
+@media (prefers-color-scheme:dark){:root{--bg:#161a18;--card:#202523;--ink:#ecece8;--mut:#a3a8a5;--pri:#5fb59d;--pri-ink:#0b1713;--line:#333a37;--warn:#fcd34d;--warnbg:#3b2f0a;--ok:#4ade80;--bad:#f87171}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;max-width:760px;margin-inline:auto;padding-bottom:40px}
+.top{padding:12px 16px 4px}.top-row{display:flex;gap:8px}
+#tripSel{flex:1;min-width:0}
+h1{font-size:1.35rem;margin:8px 0 0}.sub{margin:0;color:var(--mut);font-size:.9rem}
+select,input,textarea,button{font:inherit;color:inherit}
+select,input[type=text],input[type=number],input[type=date],input[type=url],input[type=time],textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+textarea{min-height:70px}
+button{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 12px;cursor:pointer;min-height:40px}
+button.pri{background:var(--pri);color:var(--pri-ink);border-color:var(--pri)}
+button.ghost{background:transparent}button.danger{color:var(--bad)}
+button:disabled{opacity:.4;cursor:default}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--pri);outline-offset:2px}
+.tabs{display:flex;gap:4px;padding:8px 12px;overflow-x:auto;position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
+.tabs button{flex:1 0 auto;white-space:nowrap;border-radius:999px}
+.tabs button[aria-selected=true]{background:var(--pri);color:var(--pri-ink);border-color:var(--pri);font-weight:700}
+main{padding:12px 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0}
+.card h3{margin:0 0 4px;font-size:1.05rem}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row.sp{justify-content:space-between}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+.chip{border-radius:999px;padding:4px 12px;min-height:34px;font-size:.9rem}
+.chip[aria-pressed=true]{background:var(--pri);color:var(--pri-ink);border-color:var(--pri);font-weight:700}
+.mut{color:var(--mut);font-size:.88rem}
+.badge{display:inline-block;font-size:.75rem;padding:1px 8px;border-radius:999px;border:1px solid var(--line);color:var(--mut);margin-left:4px}
+.badge.must{border-color:var(--pri);color:var(--pri);font-weight:700}
+.badge.st-done{color:var(--ok);border-color:var(--ok)}.badge.st-skipped{color:var(--mut);text-decoration:line-through}.badge.st-arrived{color:var(--warn);border-color:var(--warn)}
+.warnbox{background:var(--warnbg);color:var(--warn);border-radius:10px;padding:8px 12px;margin:8px 0;font-size:.9rem}
+.travel{margin:0 0 0 14px;padding-left:12px;border-left:3px dotted var(--line);color:var(--mut);font-size:.85rem;min-height:22px}
+.tl-item{display:grid;grid-template-columns:58px 1fr;gap:8px}
+.tl-time{font-variant-numeric:tabular-nums;font-weight:700;color:var(--pri)}
+.tl-item.off{opacity:.5}
+.tools{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}.tools button{padding:4px 10px;min-height:34px;font-size:.88rem}
+.progress{height:8px;background:var(--line);border-radius:99px;overflow:hidden}.progress>i{display:block;height:100%;background:var(--pri)}
+.stepper{display:flex;gap:6px;overflow-x:auto;padding:4px 0}.stepper button{flex:0 0 auto;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.85rem}
+.stepper button[aria-current=step]{background:var(--pri);color:var(--pri-ink);border-color:var(--pri)}
+.stepper button.done{opacity:.55}
+.check{display:flex;gap:10px;align-items:flex-start;padding:6px 0}.check input{width:22px;height:22px;margin-top:2px}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px}.photos figure{margin:0;position:relative}
+.photos img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;background:var(--line)}
+.photos button{position:absolute;top:2px;right:2px;min-height:28px;padding:0 8px}
+#map{height:55vh;min-height:300px;border-radius:14px;border:1px solid var(--line)}
+label{display:block;font-size:.88rem;margin:8px 0 2px;color:var(--mut)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#notice{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;z-index:50;max-width:92vw}
+#notice div{background:#222;color:#fff;padding:10px 16px;border-radius:12px;margin-top:6px;box-shadow:0 4px 14px #0005}
+#notice .err{background:var(--bad)}
+.foot{padding:8px 16px;color:var(--mut);font-size:.8rem}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);width:min(92vw,480px);max-height:88vh}
+dialog::backdrop{background:#0008}
+a{color:var(--pri)}
+.big-btn{width:100%;min-height:52px;font-size:1.05rem;font-weight:700}
