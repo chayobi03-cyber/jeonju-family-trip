@@ -8,8 +8,8 @@
 
 1. 저장소의 `main` 브랜치 루트에 `index.html`이 존재하는지 확인한다.
 2. GitHub 저장소의 **Settings → Pages**를 연다.
-3. Build and deployment에서 **Deploy from a branch**를 선택한다.
-4. Branch `main`, folder `/(root)`를 선택하고 저장한다.
+3. Build and deployment의 Source를 **GitHub Actions**로 선택한다 (`.github/workflows/pages.yml` 사용; 엔진 테스트 통과 후 배포).
+4. `main`에 푸시하거나 Actions에서 워크플로를 수동 실행한다.
 5. Pages 배포 워크플로/상태가 완료될 때까지 기다린다.
 6. GitHub가 표시한 Pages URL을 열고 아래 점검을 수행한다.
 

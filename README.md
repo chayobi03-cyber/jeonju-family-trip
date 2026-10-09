@@ -4,10 +4,13 @@
 
 ## 저장소 상태
 
-현재 저장소에는 프로젝트 문서가 커밋되어 있습니다. **앱 실행 파일인 루트 `index.html`은 아직 저장소에 등록되지 않았으므로, 현재 상태로는 GitHub Pages 배포를 완료할 수 없습니다.** 앱 파일을 `main` 브랜치 루트에 추가한 뒤 배포를 설정해야 합니다.
+정적 웹 앱(`index.html` + `js/` + `css/`)과 문서가 포함되어 있습니다. 빌드 과정이 없으며, `main`에 병합한 뒤 GitHub Pages(Settings → Pages → GitHub Actions)를 켜면 `.github/workflows/pages.yml`이 테스트 후 배포합니다. **Pages 설정 전에는 배포 URL이 없습니다.**
+
+로컬 실행: 저장소 루트에서 `python3 -m http.server` 후 `http://localhost:8000` 접속.
 
 ## 문서
 
+- [확장 가이드 (새 여행지·데이터 스키마)](docs/EXTENDING.md)
 - [제품·기능 명세서](docs/SPECIFICATION.md)
 - [인수·회귀 테스트 기준](docs/ACCEPTANCE_TESTS.md)
 - [배포 및 운영 가이드](docs/DEPLOYMENT.md)
@@ -22,6 +25,8 @@
 - Leaflet/OpenStreetMap 일정 지도와 Google Maps 길찾기
 - 방문 전 확인사항, 먹거리 후보, 주차 계획
 - 사용자 장소 생성, 장소 카탈로그 검색, 사진 URL/파일 추가
+- **장소별 진행**: 현재 장소 카드에서 도착/완료/건너뜀, 방문 전 체크리스트, 메모, 지출, 사진, 다음 장소로 이동
+- **다중 여행**: 여행 선택, 앱 안에서 새 여행 생성, 일차 추가, JSON 백업/복원, `js/trips/`에 데이터 파일 추가로 여행지 확장
 - 일정·장소는 브라우저 로컬 저장소, 사진은 IndexedDB에 저장
 
 ## 실행 및 배포 전 주의
@@ -33,4 +38,4 @@
 
 ## 테스트 상태
 
-테스트 케이스는 [인수·회귀 테스트 기준](docs/ACCEPTANCE_TESTS.md)에 정리되어 있습니다. 브라우저에서 직접 실행하기 전까지는 미실행으로 취급합니다.
+자동 테스트: `node tests/engine.test.js`(일정 엔진 11건 통과), `tests/smoke.js`(Playwright 브라우저 스모크 13건 통과, 지도 CDN 차단 환경). 실제 기기 인수 테스트는 [인수·회귀 테스트 기준](docs/ACCEPTANCE_TESTS.md)에 정리되어 있으며, 수동 실행 전까지 미실행으로 취급합니다. 데스크톱 Chromium 모바일 뷰포트 스모크만 검증됐고 Chrome Android 실기기·지도 타일 로드는 미검증입니다.
