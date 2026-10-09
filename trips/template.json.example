@@ -1,0 +1,19 @@
+{
+  "id": "my-trip-1",
+  "title": "새 여행 제목",
+  "dest": "여행지",
+  "party": "동행 설명",
+  "center": [37.5665, 126.978],
+  "days": [{ "n": 1, "label": "1일차", "start": "10:00" }, { "n": 2, "label": "2일차", "start": "09:30" }],
+  "mandatory": [],
+  "defaultPlan": "main",
+  "places": [
+    { "id": "spot-a", "name": "첫 번째 장소", "cat": "sight", "lat": 37.5665, "lon": 126.978, "approx": true, "dur": 60,
+      "desc": "설명", "hours": "운영시간 확인 필요", "tips": ["팁"], "checks": ["운영시간 확인"] },
+    { "id": "spot-b", "name": "점심", "cat": "food", "dur": 70, "food": ["메뉴 후보"] }
+  ],
+  "plans": {
+    "main": { "label": "기본", "desc": "기본 일정",
+      "days": { "1": [{ "id": "d1-a", "p": "spot-a" }, { "id": "d1-b", "p": "spot-b" }], "2": [] } }
+  }
+}

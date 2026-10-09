@@ -244,6 +244,8 @@
       (custom ? '' : '<p class="mut">기본 제공 여행은 일차 삭제가 제한됩니다. 새 여행을 만들면 자유롭게 구성할 수 있어요.</p>') + '</div>' +
       '<div class="card"><h3>백업 / 복원</h3><p class="mut">일정·내 장소·진행 기록·사진 URL을 JSON으로 저장합니다. (기기 안에 저장된 사진 파일은 포함되지 않습니다.)</p>' +
       '<div class="row"><button class="pri" data-act="export">내보내기</button><button data-act="import">가져오기</button><input type="file" id="importFile" accept="application/json" hidden></div></div>' +
+      '<div class="card"><h3>여행(여행지) 가져오기 / 내보내기</h3><p class="mut">다른 여행지는 여행 JSON 파일로 추가할 수 있어요 (형식: trips/template.json.example). 지금 여행을 내보내 템플릿으로 쓰거나 가족과 공유할 수도 있습니다.</p>' +
+      '<div class="row"><button class="pri" data-act="import-trip">여행 파일 가져오기</button><button data-act="export-trip">현재 여행 내보내기</button><input type="file" id="tripFile" accept="application/json,.json" hidden></div></div>' +
       '<div class="card"><h3>데이터 초기화</h3><div class="row"><button class="danger" data-act="reset-trip">이 여행 진행 기록 초기화</button></div></div>' +
       '<div class="card"><h3>여행지 추가하기</h3><p class="mut">개발자는 <code>js/trips/</code>에 여행 데이터 파일을 추가해 새 여행지를 등록할 수 있습니다. 자세한 방법은 docs/EXTENDING.md 참고.</p></div>';
   }
@@ -388,6 +390,23 @@
         try { var j = JSON.parse(rd.result); if (j.app !== 'trip-planner' || !j.state) throw new Error(); if (!confirm('현재 데이터를 백업 파일 내용으로 덮어쓸까요?')) return;
           S.customTrips = j.state.customTrips || {}; S.ts = j.state.ts || {}; S.activeTrip = j.state.activeTrip; render(); toast('가져오기 완료'); } catch (x) { toast('올바른 백업 파일이 아닙니다.', true); } };
       rd.readAsText(f.files[0]); }; return f.click(); }
+    if (a === 'export-trip') {
+      var tj = clone(t); tj.places = tj.places.concat(s.userPlaces);
+      Object.keys(s.ov).forEach(function (k) { var pr = k.split(':'); if (tj.plans[pr[0]]) tj.plans[pr[0]].days[pr[1]] = s.ov[k]; });
+      var tb = new Blob([JSON.stringify(tj, null, 2)], { type: 'application/json' }), tl = document.createElement('a');
+      tl.href = URL.createObjectURL(tb); tl.download = t.id + '.json'; tl.click(); return;
+    }
+    if (a === 'import-trip') {
+      var tf = document.getElementById('tripFile'); tf.onchange = function () {
+        var rd = new FileReader(); rd.onload = function () {
+          var j; try { j = JSON.parse(rd.result); } catch (x) { return toast('JSON 형식이 올바르지 않습니다.', true); }
+          var errs = E.validateTrip(j); if (errs.length) return toast('가져오기 실패: ' + errs.slice(0, 2).join(' / '), true);
+          if (allTrips().some(function (x) { return x.id === j.id; })) j.id = j.id + '-' + E.uid('').slice(1, 5);
+          S.customTrips[j.id] = j; S.activeTrip = j.id; S.tab = 'now'; render(); toast('여행을 가져왔어요: ' + j.title);
+        };
+        rd.readAsText(tf.files[0]); tf.value = '';
+      }; return tf.click();
+    }
     if (a === 'reset-trip') { if (!confirm('이 여행의 일정 수정·진행 기록·내 장소를 모두 초기화할까요?')) return; delete S.ts[t.id]; focusId = null; return render(); }
   });
 
@@ -406,6 +425,7 @@
   });
 
   /* 기본 여행에 사용자가 추가한 일차·시작시각 복원 */
+  function boot() {
   allTrips().forEach(function (t) {
     if (S.extraDays && S.extraDays[t.id]) for (var n = t.days.length + 1; n <= S.extraDays[t.id]; n++) {
       t.days.push({ n: n, label: n + '일차', start: '10:00' }); Object.keys(t.plans).forEach(function (k) { t.plans[k].days[n] = t.plans[k].days[n] || []; });
@@ -413,4 +433,6 @@
     var ds = S.dayStarts && S.dayStarts[t.id]; if (ds) t.days.forEach(function (d) { if (ds[d.n]) d.start = ds[d.n]; });
   });
   render();
+  }
+  TripRegistry.loadManifest('trips/index.json').then(function () { boot(); });
 })();

@@ -49,4 +49,19 @@ t('현재 항목 인덱스', () => {
 });
 t('길찾기 URL', () => { assert.ok(E.directionsUrl(pb.jeondong, 'walk').includes('destination=35.8133%2C127.1497')); });
 t('항목 검증', () => { assert.equal(E.validateItems([{ id: 'x', p: 'nope' }, { id: 'y', p: 'lunch', dur: -5 }], pb).length, 2); });
+
+t('여행 데이터 검증', () => {
+  assert.deepEqual(E.validateTrip(trip), []);
+  const bad = JSON.parse(JSON.stringify(trip));
+  bad.places[0].lat = 200; bad.plans.balanced.days[1][0].p = 'nope'; bad.mandatory = ['zzz'];
+  assert.ok(E.validateTrip(bad).length >= 3);
+  assert.ok(E.validateTrip(null).length === 1);
+});
+t('trips/*.json 템플릿·매니페스트 유효', () => {
+  const fs = require('fs'), path = require('path');
+  const dir = path.join(__dirname, '../trips');
+  JSON.parse(fs.readFileSync(path.join(dir, 'index.json'), 'utf8')).forEach(f =>
+    assert.deepEqual(E.validateTrip(JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'))), [], f));
+  assert.deepEqual(E.validateTrip(JSON.parse(fs.readFileSync(path.join(dir, 'template.json.example'), 'utf8'))), []);
+});
 console.log(n + ' tests passed');

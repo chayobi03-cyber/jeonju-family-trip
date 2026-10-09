@@ -37,7 +37,7 @@ main{padding:12px 16px}
 .stepper{display:flex;gap:6px;overflow-x:auto;padding:4px 0}.stepper button{flex:0 0 auto;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.85rem}
 .stepper button[aria-current=step]{background:var(--pri);color:var(--pri-ink);border-color:var(--pri)}
 .stepper button.done{opacity:.55}
-.check{display:flex;gap:10px;align-items:flex-start;padding:6px 0}.check input{width:22px;height:22px;margin-top:2px}
+.check{display:flex;gap:10px;align-items:flex-start;padding:6px 0}.check input{width:28px;height:28px;margin-top:0;flex:none}.check{min-height:44px;align-items:center}
 .photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px}.photos figure{margin:0;position:relative}
 .photos img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;background:var(--line)}
 .photos button{position:absolute;top:2px;right:2px;min-height:28px;padding:0 8px}

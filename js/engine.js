@@ -150,7 +150,39 @@
       '&travelmode=' + (mode === 'car' ? 'driving' : 'walking');
   }
 
-  var api = { uid: uid, esc: esc, validCoord: validCoord, hasCoord: hasCoord, haversineKm: haversineKm, travel: travel,
+  /** 여행 데이터(JSON) 검증. 오류 문자열 배열을 반환한다 (빈 배열이면 유효). */
+  function validateTrip(t) {
+    var errs = [];
+    if (!t || typeof t !== 'object') return ['여행 데이터가 객체가 아닙니다.'];
+    if (!t.id || typeof t.id !== 'string') errs.push('id가 필요합니다.');
+    if (!t.title) errs.push('title이 필요합니다.');
+    if (!Array.isArray(t.days) || !t.days.length) errs.push('days가 비어 있습니다.');
+    else t.days.forEach(function (d, i) { if (!d || d.n !== i + 1) errs.push('days[' + i + '].n은 ' + (i + 1) + '이어야 합니다.'); });
+    if (!Array.isArray(t.places)) errs.push('places가 배열이 아닙니다.');
+    var ids = {};
+    (t.places || []).forEach(function (p, i) {
+      if (!p || !p.id || !p.name) { errs.push('places[' + i + ']에 id/name이 필요합니다.'); return; }
+      if (ids[p.id]) errs.push('장소 id 중복: ' + p.id);
+      ids[p.id] = 1;
+      if ((p.lat != null || p.lon != null) && !validCoord(p.lat, p.lon)) errs.push(p.name + ': 좌표가 올바르지 않습니다.');
+      if (p.dur != null && !(+p.dur >= 0)) errs.push(p.name + ': dur가 올바르지 않습니다.');
+    });
+    if (!t.plans || typeof t.plans !== 'object' || !Object.keys(t.plans).length) errs.push('plans가 필요합니다.');
+    else Object.keys(t.plans).forEach(function (k) {
+      var days = t.plans[k].days;
+      if (!days) { errs.push('plans.' + k + '.days가 필요합니다.'); return; }
+      Object.keys(days).forEach(function (d) {
+        (days[d] || []).forEach(function (it) {
+          if (!it.id) errs.push('plans.' + k + ' ' + d + '일차 항목에 id가 필요합니다.');
+          if (it.p && !ids[it.p]) errs.push('plans.' + k + ': 알 수 없는 장소 ' + it.p);
+        });
+      });
+    });
+    (t.mandatory || []).forEach(function (m) { if (!ids[m]) errs.push('mandatory: 알 수 없는 장소 ' + m); });
+    return errs;
+  }
+
+  var api = { validateTrip: validateTrip, uid: uid, esc: esc, validCoord: validCoord, hasCoord: hasCoord, haversineKm: haversineKm, travel: travel,
     toMin: toMin, fmt: fmt, timeline: timeline, validateItems: validateItems, mandatoryStatus: mandatoryStatus,
     repairMandatory: repairMandatory, move: move, currentIndex: currentIndex, dayStats: dayStats, directionsUrl: directionsUrl };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.Engine = api;
